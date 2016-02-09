@@ -4,22 +4,22 @@ import { Link } from 'react-router'
 var PostsList = React.createClass({
 
 	render: function() {
-    var Posts = this.props.data.map(function(post) {
-      	return (
-        	<li className="post" key={post.id}>
-          		<Link to={post.slug}>
-          			<div dangerouslySetInnerHTML={{__html:post.title.rendered}} />
-          		</Link>
-        	</li>
-      	);
-    });
-    
-    return (
-      	<ul className="posts">
-        	{Posts}
-      	</ul>
-    );
-  }
+	    var Posts = this.props.data.map(function(post) {
+	      	return (
+	        	<li className="post" key={post.id}>
+	          		<Link to={post.slug}>
+	          			<div dangerouslySetInnerHTML={{__html:post.title.rendered}} />
+	          		</Link>
+	        	</li>
+	      	);
+	    });
+	    
+	    return (
+	      	<ul className="posts">
+	        	{Posts}
+	      	</ul>
+	    );
+  	}
 
 });
 
