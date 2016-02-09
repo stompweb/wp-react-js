@@ -24,6 +24,7 @@ var Post = React.createClass({
 	},
 
 	render: function() {
+		// TODO: Access the individual post
 		console.log(this.state.data);
 		return (
 			<div>

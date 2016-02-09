@@ -4,6 +4,7 @@ var Home = require('../components/Home');
 var Post = require('../components/Post');
 import { Router, Route, Link, IndexRoute, browserHistory} from 'react-router'
 
+// TODO: Remove # from URLs
 module.exports = (
 
 	<Router history={browserHistory}>

@@ -37,6 +37,7 @@ var Main = React.createClass({
 		});
 	},
 
+	// TODO: Cache the posts
 	componentDidMount: function() {
 		this.setUpData();
 	},
