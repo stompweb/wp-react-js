@@ -1,6 +1,20 @@
 var React = require('react');
 import { Link } from 'react-router'
 
+var PostContent = React.createClass({
+
+	render: function() {
+	    
+	    return (
+	    	<div>
+	      		<h2><div dangerouslySetInnerHTML={{__html:this.props.title}} /></h2>
+				<div dangerouslySetInnerHTML={{__html:this.props.content}} />
+			</div>
+	    );
+  	}
+
+});
+
 var Post = React.createClass({
 
 	setUpData: function() {
@@ -24,11 +38,11 @@ var Post = React.createClass({
 	},
 
 	render: function() {
-		if ( ! this.state.data ) { return <div /> }
-		//console.log(this.state.data[0].id);
+		if ( this.state.data.length < 1 ) { return <div /> }
+		console.log(this.state.data[0].id);
 		return (
 			<div>
-				<h2>Post Name</h2>
+				<PostContent id={this.state.data[0].id} title={this.state.data[0].title.rendered} content={this.state.data[0].content.rendered}/>
 				<Link to='/'>Back to list of posts</Link>
 			</div>
 		);

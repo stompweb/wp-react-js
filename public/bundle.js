@@ -24832,6 +24832,26 @@
 	var React = __webpack_require__(1);
 
 
+	var PostContent = React.createClass({
+		displayName: 'PostContent',
+
+
+		render: function render() {
+
+			return React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'h2',
+					null,
+					React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.title } })
+				),
+				React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.content } })
+			);
+		}
+
+	});
+
 	var Post = React.createClass({
 		displayName: 'Post',
 
@@ -24857,18 +24877,14 @@
 		},
 
 		render: function render() {
-			if (!this.state.data) {
+			if (this.state.data.length < 1) {
 				return React.createElement('div', null);
 			}
-			//console.log(this.state.data[0].id);
+			console.log(this.state.data[0].id);
 			return React.createElement(
 				'div',
 				null,
-				React.createElement(
-					'h2',
-					null,
-					'Post Name'
-				),
+				React.createElement(PostContent, { id: this.state.data[0].id, title: this.state.data[0].title.rendered, content: this.state.data[0].content.rendered }),
 				React.createElement(
 					_reactRouter.Link,
 					{ to: '/' },
