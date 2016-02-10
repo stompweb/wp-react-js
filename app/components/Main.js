@@ -29,7 +29,7 @@ var Main = React.createClass({
 
 	setUpData: function() {
 		$.ajax({
-			url: 'http://www.wired.com/wp-json/wp/v2/posts',
+			url: 'https://feelingrestful.com/wp-json/wp/v2/posts',
 			dataType: 'json',
 			success: function(posts) {
 				this.setState({data: posts});

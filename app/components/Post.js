@@ -19,7 +19,7 @@ var Post = React.createClass({
 
 	setUpData: function() {
 		$.ajax({
-			url: 'http://www.wired.com/wp-json/wp/v2/posts?filter[name]=' + this.props.params.slug,
+			url: 'https://feelingrestful.com/wp-json/wp/v2/posts?filter[name]=' + this.props.params.slug,
 			dataType: 'json',
 			success: function(post) {
 				this.setState({data: post});
@@ -39,7 +39,6 @@ var Post = React.createClass({
 
 	render: function() {
 		if ( this.state.data.length < 1 ) { return <div /> }
-		console.log(this.state.data[0].id);
 		return (
 			<div>
 				<PostContent id={this.state.data[0].id} title={this.state.data[0].title.rendered} content={this.state.data[0].content.rendered}/>

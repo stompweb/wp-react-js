@@ -24751,7 +24751,7 @@
 
 		setUpData: function setUpData() {
 			$.ajax({
-				url: 'http://www.wired.com/wp-json/wp/v2/posts',
+				url: 'https://feelingrestful.com/wp-json/wp/v2/posts',
 				dataType: 'json',
 				success: function (posts) {
 					this.setState({ data: posts });
@@ -24858,7 +24858,7 @@
 
 		setUpData: function setUpData() {
 			$.ajax({
-				url: 'http://www.wired.com/wp-json/wp/v2/posts?filter[name]=' + this.props.params.slug,
+				url: 'https://feelingrestful.com/wp-json/wp/v2/posts?filter[name]=' + this.props.params.slug,
 				dataType: 'json',
 				success: function (post) {
 					this.setState({ data: post });
@@ -24880,7 +24880,6 @@
 			if (this.state.data.length < 1) {
 				return React.createElement('div', null);
 			}
-			console.log(this.state.data[0].id);
 			return React.createElement(
 				'div',
 				null,
