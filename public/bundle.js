@@ -52,11 +52,7 @@
 	var Router = __webpack_require__(159).Router;
 	var routes = __webpack_require__(216);
 
-	ReactDOM.render(React.createElement(
-		Router,
-		null,
-		routes
-	), document.getElementById('app'));
+	ReactDOM.render(routes, document.getElementById('app'));
 
 /***/ },
 /* 1 */
@@ -24861,8 +24857,10 @@
 		},
 
 		render: function render() {
-			// TODO: Access the individual post
-			console.log(this.state.data);
+			if (!this.state.data) {
+				return React.createElement('div', null);
+			}
+			//console.log(this.state.data[0].id);
 			return React.createElement(
 				'div',
 				null,

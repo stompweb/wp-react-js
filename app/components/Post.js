@@ -24,8 +24,8 @@ var Post = React.createClass({
 	},
 
 	render: function() {
-		// TODO: Access the individual post
-		console.log(this.state.data);
+		if ( ! this.state.data ) { return <div /> }
+		//console.log(this.state.data[0].id);
 		return (
 			<div>
 				<h2>Post Name</h2>
