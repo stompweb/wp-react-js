@@ -24790,25 +24790,32 @@
 /* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+
+	var _reactRouter = __webpack_require__(159);
 
 	var React = __webpack_require__(1);
 
+
 	var Home = React.createClass({
-		displayName: "Home",
+		displayName: 'Home',
 
 
 		render: function render() {
 			return React.createElement(
-				"div",
+				'div',
 				null,
 				React.createElement(
-					"div",
-					{ className: "container" },
+					'div',
+					{ className: 'container' },
 					React.createElement(
-						"h1",
-						null,
-						"WordPress Reader"
+						_reactRouter.Link,
+						{ to: '/' },
+						React.createElement(
+							'h1',
+							null,
+							'WordPress Reader'
+						)
 					),
 					this.props.children
 				)

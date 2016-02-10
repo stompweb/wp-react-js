@@ -18,3 +18,8 @@ h1 {
 	height: auto;
 	margin: 20px 0;
 }
+
+.container iframe {
+	max-width: 100%;
+	margin: 20px 0;
+}
