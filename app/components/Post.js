@@ -6,9 +6,28 @@ var PostContent = React.createClass({
 	render: function() {
 	    
 	    return (
-	    	<div>
-	      		<h2><div dangerouslySetInnerHTML={{__html:this.props.title}} /></h2>
-				<div dangerouslySetInnerHTML={{__html:this.props.content}} />
+	    	<div className="col-md-8">
+	    		<div className="post">
+	      			<h2><div dangerouslySetInnerHTML={{__html:this.props.title}} /></h2>
+					<div dangerouslySetInnerHTML={{__html:this.props.content}} />
+				</div>
+			</div>
+	    );
+  	}
+
+});
+
+var AuthorBio = React.createClass({
+
+	render: function() {
+	    
+	    return (
+	    	<div className="col-md-offset-1 col-md-3">
+	      		<div className="card">
+	      			<div className="card-block">
+						<h4>Steven Jones</h4>
+	      			</div>
+	      		</div>
 			</div>
 	    );
   	}
@@ -41,8 +60,13 @@ var Post = React.createClass({
 		if ( this.state.data.length < 1 ) { return <div /> }
 		return (
 			<div>
-				<PostContent id={this.state.data[0].id} title={this.state.data[0].title.rendered} content={this.state.data[0].content.rendered}/>
-				<Link to='/'>Back to list of posts</Link>
+				<div className="row">
+					<PostContent id={this.state.data[0].id} title={this.state.data[0].title.rendered} content={this.state.data[0].content.rendered}/>
+					<AuthorBio />
+				</div>
+				<div className="back">
+					<Link to='/'>Back to list of posts</Link>
+				</div>
 			</div>
 		);
 	}

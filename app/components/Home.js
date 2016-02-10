@@ -5,10 +5,10 @@ var Home = React.createClass({
 	render: function() {
 		return (
 			<div>
-				<h1>
-					Wired.com Reader
-				</h1>
-				<div>{this.props.children}</div>
+				<div className="container">
+					<h1>WordPress Reader</h1>
+					{this.props.children}
+				</div>
 			</div>
 		);
 	}

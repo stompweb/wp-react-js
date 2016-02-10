@@ -1,12 +1,17 @@
 var React = require('react');
 import { Link } from 'react-router'
+var WP = require( 'wordpress-rest-api' );
+var site = new WP({
+    endpoint: 'https://feelingrestful.com/wp-json'
+});
+var postsRequest = site.posts();
 
 var PostsList = React.createClass({
 
 	render: function() {
 	    var Posts = this.props.data.map(function(post) {
 	      	return (
-	        	<li className="post" key={post.id}>
+	        	<li className="list-group-item" key={post.id}>
 	          		<Link to={post.slug}>
 	          			<div dangerouslySetInnerHTML={{__html:post.title.rendered}} />
 	          		</Link>
@@ -15,15 +20,13 @@ var PostsList = React.createClass({
 	    });
 	    
 	    return (
-	      	<ul className="posts">
+	      	<ul className="list-group">
 	        	{Posts}
 	      	</ul>
 	    );
   	}
 
 });
-
-module.exports = Main;
 
 var Main = React.createClass({
 
@@ -52,7 +55,6 @@ var Main = React.createClass({
 
 		return (
 			<div>
-				<h2>List of Posts</h2>
 				<PostsList data={this.state.data}/>
 			</div>
 		)
