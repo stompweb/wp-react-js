@@ -2,14 +2,18 @@ var React = require('react');
 import { Link } from 'react-router'
 var WP = require( 'wordpress-rest-api' );
 var site = new WP({
-    endpoint: 'https://feelingrestful.com/wp-json'
+    endpoint: 'https://stomptheweb.co.uk/wp-json'
 });
 var postsRequest = site.posts();
 
 var PostsList = React.createClass({
 
+	propTypes: {
+		posts: React.PropTypes.array.isRequired,
+	},
+
 	render: function() {
-	    var Posts = this.props.data.map(function(post) {
+	    var Posts = this.props.posts.map(function(post) {
 	      	return (
 	        	<li className="list-group-item" key={post.id}>
 	          		<Link to={post.slug}>
@@ -32,7 +36,7 @@ var Main = React.createClass({
 
 	setUpData: function() {
 		$.ajax({
-			url: 'https://feelingrestful.com/wp-json/wp/v2/posts',
+			url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
 			dataType: 'json',
 			success: function(posts) {
 				this.setState({data: posts});
@@ -52,10 +56,10 @@ var Main = React.createClass({
 	},
 
 	render: function() {
-
+		if ( this.state.data.length < 1 ) { return <div /> }
 		return (
 			<div>
-				<PostsList data={this.state.data}/>
+				<PostsList posts={this.state.data}/>
 			</div>
 		)
 

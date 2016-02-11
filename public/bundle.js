@@ -24690,8 +24690,8 @@
 
 	var React = __webpack_require__(1);
 	var Main = __webpack_require__(217);
-	var Home = __webpack_require__(218);
-	var Post = __webpack_require__(219);
+	var Home = __webpack_require__(259);
+	var Post = __webpack_require__(260);
 
 
 	// TODO: Remove # from URLs
@@ -24716,9 +24716,9 @@
 
 	var React = __webpack_require__(1);
 
-	var WP = __webpack_require__(220);
+	var WP = __webpack_require__(218);
 	var site = new WP({
-		endpoint: 'https://feelingrestful.com/wp-json'
+		endpoint: 'https://stomptheweb.co.uk/wp-json'
 	});
 	var postsRequest = site.posts();
 
@@ -24726,8 +24726,12 @@
 		displayName: 'PostsList',
 
 
+		propTypes: {
+			posts: React.PropTypes.array.isRequired
+		},
+
 		render: function render() {
-			var Posts = this.props.data.map(function (post) {
+			var Posts = this.props.posts.map(function (post) {
 				return React.createElement(
 					'li',
 					{ className: 'list-group-item', key: post.id },
@@ -24754,7 +24758,7 @@
 
 		setUpData: function setUpData() {
 			$.ajax({
-				url: 'https://feelingrestful.com/wp-json/wp/v2/posts',
+				url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
 				dataType: 'json',
 				success: function (posts) {
 					this.setState({ data: posts });
@@ -24774,11 +24778,13 @@
 		},
 
 		render: function render() {
-
+			if (this.state.data.length < 1) {
+				return React.createElement('div', null);
+			}
 			return React.createElement(
 				'div',
 				null,
-				React.createElement(PostsList, { data: this.state.data })
+				React.createElement(PostsList, { posts: this.state.data })
 			);
 		}
 
@@ -24788,161 +24794,6 @@
 
 /***/ },
 /* 218 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactRouter = __webpack_require__(159);
-
-	var React = __webpack_require__(1);
-
-
-	var Home = React.createClass({
-		displayName: 'Home',
-
-
-		render: function render() {
-			return React.createElement(
-				'div',
-				null,
-				React.createElement(
-					'div',
-					{ className: 'container' },
-					React.createElement(
-						_reactRouter.Link,
-						{ to: '/' },
-						React.createElement(
-							'h1',
-							null,
-							'WordPress Reader'
-						)
-					),
-					this.props.children
-				)
-			);
-		}
-
-	});
-
-	module.exports = Home;
-
-/***/ },
-/* 219 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _reactRouter = __webpack_require__(159);
-
-	var React = __webpack_require__(1);
-
-
-	var PostContent = React.createClass({
-		displayName: 'PostContent',
-
-
-		render: function render() {
-
-			return React.createElement(
-				'div',
-				{ className: 'col-md-8' },
-				React.createElement(
-					'div',
-					{ className: 'post' },
-					React.createElement(
-						'h2',
-						null,
-						React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.title } })
-					),
-					React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.content } })
-				)
-			);
-		}
-
-	});
-
-	var AuthorBio = React.createClass({
-		displayName: 'AuthorBio',
-
-
-		render: function render() {
-
-			return React.createElement(
-				'div',
-				{ className: 'col-md-offset-1 col-md-3' },
-				React.createElement(
-					'div',
-					{ className: 'card' },
-					React.createElement(
-						'div',
-						{ className: 'card-block' },
-						React.createElement(
-							'h4',
-							null,
-							'Steven Jones'
-						)
-					)
-				)
-			);
-		}
-
-	});
-
-	var Post = React.createClass({
-		displayName: 'Post',
-
-
-		setUpData: function setUpData() {
-			$.ajax({
-				url: 'https://feelingrestful.com/wp-json/wp/v2/posts?filter[name]=' + this.props.params.slug,
-				dataType: 'json',
-				success: function (post) {
-					this.setState({ data: post });
-				}.bind(this)
-			});
-		},
-
-		componentDidMount: function componentDidMount() {
-			this.setUpData();
-		},
-
-		getInitialState: function getInitialState() {
-			return {
-				data: []
-			};
-		},
-
-		render: function render() {
-			if (this.state.data.length < 1) {
-				return React.createElement('div', null);
-			}
-			return React.createElement(
-				'div',
-				null,
-				React.createElement(
-					'div',
-					{ className: 'row' },
-					React.createElement(PostContent, { id: this.state.data[0].id, title: this.state.data[0].title.rendered, content: this.state.data[0].content.rendered }),
-					React.createElement(AuthorBio, null)
-				),
-				React.createElement(
-					'div',
-					{ className: 'back' },
-					React.createElement(
-						_reactRouter.Link,
-						{ to: '/' },
-						'Back to list of posts'
-					)
-				)
-			);
-		}
-
-	});
-
-	module.exports = Post;
-
-/***/ },
-/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24962,7 +24813,7 @@
 	 * @beta
 	 })
 	 */
-	var extend = __webpack_require__( 221 );
+	var extend = __webpack_require__( 219 );
 
 	var defaults = {
 		username: '',
@@ -24970,14 +24821,14 @@
 	};
 
 	// Pull in request module constructors
-	var MediaRequest = __webpack_require__( 224 );
-	var PagesRequest = __webpack_require__( 256 );
-	var PostsRequest = __webpack_require__( 257 );
-	var TaxonomiesRequest = __webpack_require__( 258 );
-	var TypesRequest = __webpack_require__( 259 );
-	var UsersRequest = __webpack_require__( 260 );
-	var CollectionRequest = __webpack_require__( 225 );
-	var WPRequest = __webpack_require__( 226 );
+	var MediaRequest = __webpack_require__( 222 );
+	var PagesRequest = __webpack_require__( 254 );
+	var PostsRequest = __webpack_require__( 255 );
+	var TaxonomiesRequest = __webpack_require__( 256 );
+	var TypesRequest = __webpack_require__( 257 );
+	var UsersRequest = __webpack_require__( 258 );
+	var CollectionRequest = __webpack_require__( 223 );
+	var WPRequest = __webpack_require__( 224 );
 
 	/**
 	 * The base constructor for the WP API service
@@ -25252,15 +25103,15 @@
 
 
 /***/ },
-/* 221 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(222);
+	module.exports = __webpack_require__(220);
 
 
 
 /***/ },
-/* 222 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -25272,7 +25123,7 @@
 	 * @fileoverview
 	 * Port of jQuery.extend that actually works on node.js
 	 */
-	var is = __webpack_require__(223);
+	var is = __webpack_require__(221);
 
 	function extend() {
 	  var target = arguments[0] || {};
@@ -25348,7 +25199,7 @@
 
 
 /***/ },
-/* 223 */
+/* 221 */
 /***/ function(module, exports) {
 
 	/* globals window, HTMLElement */
@@ -26115,7 +25966,7 @@
 
 
 /***/ },
-/* 224 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26124,8 +25975,8 @@
 	 * @submodule MediaRequest
 	 * @beta
 	 */
-	var CollectionRequest = __webpack_require__( 225 );
-	var inherit = __webpack_require__( 253 ).inherits;
+	var CollectionRequest = __webpack_require__( 223 );
+	var inherit = __webpack_require__( 251 ).inherits;
 
 	/**
 	 * MediaRequest extends CollectionRequest to handle the /media API endpoint
@@ -26245,7 +26096,7 @@
 
 
 /***/ },
-/* 225 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26255,12 +26106,12 @@
 	 * @submodule CollectionRequest
 	 * @beta
 	 */
-	var WPRequest = __webpack_require__( 226 );
-	var _ = __webpack_require__( 251 );
-	var extend = __webpack_require__( 221 );
-	var inherit = __webpack_require__( 253 ).inherits;
+	var WPRequest = __webpack_require__( 224 );
+	var _ = __webpack_require__( 249 );
+	var extend = __webpack_require__( 219 );
+	var inherit = __webpack_require__( 251 ).inherits;
 
-	var alphaNumericSort = __webpack_require__( 252 );
+	var alphaNumericSort = __webpack_require__( 250 );
 
 	/**
 	 * CollectionRequest extends WPRequest with properties & methods for filtering collections
@@ -26626,7 +26477,7 @@
 
 
 /***/ },
-/* 226 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26637,17 +26488,17 @@
 	 */
 
 	/*jshint -W079 */// Suppress warning about redefiniton of `Promise`
-	var Promise = __webpack_require__( 227 );
-	var agent = __webpack_require__( 229 );
-	var Route = __webpack_require__( 232 );
-	var parseLinkHeader = __webpack_require__( 240 ).parse;
-	var url = __webpack_require__( 241 );
-	var qs = __webpack_require__( 247 );
-	var _ = __webpack_require__( 251 );
-	var extend = __webpack_require__( 221 );
+	var Promise = __webpack_require__( 225 );
+	var agent = __webpack_require__( 227 );
+	var Route = __webpack_require__( 230 );
+	var parseLinkHeader = __webpack_require__( 238 ).parse;
+	var url = __webpack_require__( 239 );
+	var qs = __webpack_require__( 245 );
+	var _ = __webpack_require__( 249 );
+	var extend = __webpack_require__( 219 );
 
 	// TODO: reorganize library so that this has a better home
-	var alphaNumericSort = __webpack_require__( 252 );
+	var alphaNumericSort = __webpack_require__( 250 );
 
 	/**
 	 * WPRequest is the base API request object constructor
@@ -27356,7 +27207,7 @@
 
 
 /***/ },
-/* 227 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process, global, setImmediate) {/* @preserve
@@ -32691,10 +32542,10 @@
 
 	},{"./es5":13}]},{},[4])(4)
 	});                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), (function() { return this; }()), __webpack_require__(228).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), (function() { return this; }()), __webpack_require__(226).setImmediate))
 
 /***/ },
-/* 228 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(4).nextTick;
@@ -32773,18 +32624,18 @@
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(228).setImmediate, __webpack_require__(228).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(226).setImmediate, __webpack_require__(226).clearImmediate))
 
 /***/ },
-/* 229 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Emitter = __webpack_require__(230);
-	var reduce = __webpack_require__(231);
+	var Emitter = __webpack_require__(228);
+	var reduce = __webpack_require__(229);
 
 	/**
 	 * Root reference for iframes.
@@ -33973,7 +33824,7 @@
 
 
 /***/ },
-/* 230 */
+/* 228 */
 /***/ function(module, exports) {
 
 	
@@ -34140,7 +33991,7 @@
 
 
 /***/ },
-/* 231 */
+/* 229 */
 /***/ function(module, exports) {
 
 	
@@ -34169,7 +34020,7 @@
 	};
 
 /***/ },
-/* 232 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -34177,19 +34028,19 @@
 	 */
 	'use strict';
 
-	var Route = __webpack_require__(233);
+	var Route = __webpack_require__(231);
 
 
 	module.exports = Route;
 
 /***/ },
-/* 233 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var Parser = __webpack_require__(234),
-	    RegexpVisitor = __webpack_require__(237),
-	    ReverseVisitor = __webpack_require__(239);
+	var Parser = __webpack_require__(232),
+	    RegexpVisitor = __webpack_require__(235),
+	    ReverseVisitor = __webpack_require__(237);
 
 	var RoutePrototype = Object.create(null);
 
@@ -34250,7 +34101,7 @@
 	}
 
 /***/ },
-/* 234 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -34259,13 +34110,13 @@
 	'use strict';
 
 	/** Wrap the compiled parser with the context to create node objects */
-	var parser = __webpack_require__(235).parser;
-	parser.yy = __webpack_require__(236);
+	var parser = __webpack_require__(233).parser;
+	parser.yy = __webpack_require__(234);
 	module.exports = parser;
 
 
 /***/ },
-/* 235 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* parser generated by jison 0.4.15 */
@@ -34896,7 +34747,7 @@
 	}
 
 /***/ },
-/* 236 */
+/* 234 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -34931,12 +34782,12 @@
 
 
 /***/ },
-/* 237 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createVisitor  = __webpack_require__(238),
+	var createVisitor  = __webpack_require__(236),
 	    escapeRegExp = /[\-{}\[\]+?.,\\\^$|#\s]/g;
 
 	/**
@@ -35033,7 +34884,7 @@
 	module.exports = RegexpVisitor;
 
 /***/ },
-/* 238 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35041,7 +34892,7 @@
 	 * @module route/visitors/create_visitor
 	 */
 
-	var nodeTypes = Object.keys(__webpack_require__(236));
+	var nodeTypes = Object.keys(__webpack_require__(234));
 
 	/**
 	 * Helper for creating visitors. Take an object of node name to handler
@@ -35076,12 +34927,12 @@
 	module.exports = createVisitor;
 
 /***/ },
-/* 239 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createVisitor  = __webpack_require__(238);
+	var createVisitor  = __webpack_require__(236);
 
 	/**
 	 * Visitor for the AST to construct a path with filled in parameters
@@ -35148,7 +34999,7 @@
 	module.exports = ReverseVisitor;
 
 /***/ },
-/* 240 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (name, definition, context) {
@@ -35203,7 +35054,7 @@
 
 
 /***/ },
-/* 241 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -35227,7 +35078,7 @@
 	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 	// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-	var punycode = __webpack_require__(242);
+	var punycode = __webpack_require__(240);
 
 	exports.parse = urlParse;
 	exports.resolve = urlResolve;
@@ -35299,7 +35150,7 @@
 	      'gopher:': true,
 	      'file:': true
 	    },
-	    querystring = __webpack_require__(244);
+	    querystring = __webpack_require__(242);
 
 	function urlParse(url, parseQueryString, slashesDenoteHost) {
 	  if (url && isObject(url) && url instanceof Url) return url;
@@ -35916,7 +35767,7 @@
 
 
 /***/ },
-/* 242 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/punycode v1.3.2 by @mathias */
@@ -36448,10 +36299,10 @@
 
 	}(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(243)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(241)(module), (function() { return this; }())))
 
 /***/ },
-/* 243 */
+/* 241 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -36467,17 +36318,17 @@
 
 
 /***/ },
-/* 244 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	exports.decode = exports.parse = __webpack_require__(245);
-	exports.encode = exports.stringify = __webpack_require__(246);
+	exports.decode = exports.parse = __webpack_require__(243);
+	exports.encode = exports.stringify = __webpack_require__(244);
 
 
 /***/ },
-/* 245 */
+/* 243 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -36563,7 +36414,7 @@
 
 
 /***/ },
-/* 246 */
+/* 244 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -36633,13 +36484,13 @@
 
 
 /***/ },
-/* 247 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Stringify = __webpack_require__(248);
-	var Parse = __webpack_require__(250);
+	var Stringify = __webpack_require__(246);
+	var Parse = __webpack_require__(248);
 
 	module.exports = {
 	    stringify: Stringify,
@@ -36648,12 +36499,12 @@
 
 
 /***/ },
-/* 248 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Utils = __webpack_require__(249);
+	var Utils = __webpack_require__(247);
 
 	var internals = {
 	    delimiter: '&',
@@ -36785,7 +36636,7 @@
 
 
 /***/ },
-/* 249 */
+/* 247 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36953,12 +36804,12 @@
 
 
 /***/ },
-/* 250 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Utils = __webpack_require__(249);
+	var Utils = __webpack_require__(247);
 
 	var internals = {
 	    delimiter: '&',
@@ -37123,7 +36974,7 @@
 
 
 /***/ },
-/* 251 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -44285,10 +44136,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(243)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(241)(module), (function() { return this; }())))
 
 /***/ },
-/* 252 */
+/* 250 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -44314,7 +44165,7 @@
 
 
 /***/ },
-/* 253 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -44842,7 +44693,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 
-	exports.isBuffer = __webpack_require__(254);
+	exports.isBuffer = __webpack_require__(252);
 
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -44886,7 +44737,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(255);
+	exports.inherits = __webpack_require__(253);
 
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -44907,7 +44758,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(4)))
 
 /***/ },
-/* 254 */
+/* 252 */
 /***/ function(module, exports) {
 
 	module.exports = function isBuffer(arg) {
@@ -44918,7 +44769,7 @@
 	}
 
 /***/ },
-/* 255 */
+/* 253 */
 /***/ function(module, exports) {
 
 	if (typeof Object.create === 'function') {
@@ -44947,7 +44798,7 @@
 
 
 /***/ },
-/* 256 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44956,8 +44807,8 @@
 	 * @submodule PagesRequest
 	 * @beta
 	 */
-	var CollectionRequest = __webpack_require__( 225 );
-	var inherit = __webpack_require__( 253 ).inherits;
+	var CollectionRequest = __webpack_require__( 223 );
+	var inherit = __webpack_require__( 251 ).inherits;
 
 	/**
 	 * PagesRequest extends CollectionRequest to handle the /posts API endpoint
@@ -45150,7 +45001,7 @@
 
 
 /***/ },
-/* 257 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45159,9 +45010,9 @@
 	 * @submodule PostsRequest
 	 * @beta
 	 */
-	var CollectionRequest = __webpack_require__( 225 );
-	var inherit = __webpack_require__( 253 ).inherits;
-	var _ = __webpack_require__( 251 );
+	var CollectionRequest = __webpack_require__( 223 );
+	var inherit = __webpack_require__( 251 ).inherits;
+	var _ = __webpack_require__( 249 );
 
 	/**
 	 * PostsRequest extends CollectionRequest to handle the /posts API endpoint
@@ -45435,7 +45286,7 @@
 
 
 /***/ },
-/* 258 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45444,8 +45295,8 @@
 	 * @submodule TaxonomiesRequest
 	 * @beta
 	 */
-	var CollectionRequest = __webpack_require__( 225 );
-	var inherit = __webpack_require__( 253 ).inherits;
+	var CollectionRequest = __webpack_require__( 223 );
+	var inherit = __webpack_require__( 251 ).inherits;
 
 	/**
 	 * TaxonomiesRequest extends CollectionRequest to handle the /taxonomies API endpoint
@@ -45606,7 +45457,7 @@
 
 
 /***/ },
-/* 259 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45615,8 +45466,8 @@
 	 * @submodule TypesRequest
 	 * @beta
 	 */
-	var CollectionRequest = __webpack_require__( 225 );
-	var inherit = __webpack_require__( 253 ).inherits;
+	var CollectionRequest = __webpack_require__( 223 );
+	var inherit = __webpack_require__( 251 ).inherits;
 
 	/**
 	 * TypesRequest extends CollectionRequest to handle the /taxonomies API endpoint
@@ -45711,7 +45562,7 @@
 
 
 /***/ },
-/* 260 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45720,8 +45571,8 @@
 	 * @submodule UsersRequest
 	 * @beta
 	 */
-	var CollectionRequest = __webpack_require__( 225 );
-	var inherit = __webpack_require__( 253 ).inherits;
+	var CollectionRequest = __webpack_require__( 223 );
+	var inherit = __webpack_require__( 251 ).inherits;
 
 	/**
 	 * UsersRequest extends CollectionRequest to handle the `/users` API endpoint. The `/users`
@@ -45846,6 +45697,182 @@
 
 	module.exports = UsersRequest;
 
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactRouter = __webpack_require__(159);
+
+	var React = __webpack_require__(1);
+
+
+	var Home = React.createClass({
+		displayName: 'Home',
+
+
+		render: function render() {
+			return React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'div',
+					{ className: 'container' },
+					React.createElement(
+						_reactRouter.Link,
+						{ to: '/' },
+						React.createElement(
+							'h1',
+							null,
+							'WordPress Reader'
+						)
+					),
+					this.props.children
+				)
+			);
+		}
+
+	});
+
+	module.exports = Home;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _reactRouter = __webpack_require__(159);
+
+	var React = __webpack_require__(1);
+
+
+	var PostContent = React.createClass({
+		displayName: 'PostContent',
+
+
+		propTypes: {
+			title: React.PropTypes.string.isRequired,
+			content: React.PropTypes.string.isRequired
+		},
+
+		render: function render() {
+
+			return React.createElement(
+				'div',
+				{ className: 'col-md-8' },
+				React.createElement(
+					'div',
+					{ className: 'post' },
+					React.createElement(
+						'h1',
+						null,
+						this.props.title
+					),
+					React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.content } })
+				)
+			);
+		}
+
+	});
+
+	var PostSidebar = React.createClass({
+		displayName: 'PostSidebar',
+
+
+		propTypes: {
+			author: React.PropTypes.number.isRequired,
+			date: React.PropTypes.string.isRequired
+		},
+
+		render: function render() {
+
+			return React.createElement(
+				'div',
+				{ className: 'col-md-offset-1 col-md-3' },
+				React.createElement(
+					'div',
+					{ className: 'card' },
+					React.createElement(
+						'div',
+						{ className: 'card-block' },
+						React.createElement(
+							'h4',
+							null,
+							this.props.author
+						),
+						React.createElement(
+							'h4',
+							null,
+							this.props.date
+						)
+					)
+				)
+			);
+		}
+
+	});
+
+	var Post = React.createClass({
+		displayName: 'Post',
+
+
+		setUpData: function setUpData() {
+			$.ajax({
+				url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts?filter[name]=' + this.props.params.slug,
+				dataType: 'json',
+				success: function (post) {
+					this.setState({ data: post });
+				}.bind(this)
+			});
+		},
+
+		componentDidMount: function componentDidMount() {
+			this.setUpData();
+		},
+
+		getInitialState: function getInitialState() {
+			return {
+				data: []
+			};
+		},
+
+		render: function render() {
+			if (this.state.data.length < 1) {
+				return React.createElement('div', null);
+			}
+			var post = this.state.data[0];
+			return React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'div',
+					{ className: 'row' },
+					React.createElement(PostContent, {
+						id: post.id,
+						title: post.title.rendered,
+						content: post.content.rendered }),
+					React.createElement(PostSidebar, {
+						date: post.date,
+						author: post.author })
+				),
+				React.createElement(
+					'div',
+					{ className: 'back' },
+					React.createElement(
+						_reactRouter.Link,
+						{ to: '/' },
+						'Back to list of posts'
+					)
+				)
+			);
+		}
+
+	});
+
+	module.exports = Post;
 
 /***/ }
 /******/ ]);
