@@ -1,5 +1,6 @@
 var React = require('react');
-import { Link } from 'react-router'
+import { Link } from 'react-router';
+var DocumentTitle = require('react-document-title');
 
 var PostContent = React.createClass({
 
@@ -71,21 +72,23 @@ var Post = React.createClass({
 		if ( this.state.data.length < 1 ) { return <div /> }
 		var post = this.state.data[0];
 		return (
-			<div>
-				<div className="row">
-					<PostContent
-						id={post.id} 
-						title={post.title.rendered} 
-						content={post.content.rendered}/>
+			<DocumentTitle title={post.title.rendered}>
+				<div>
+					<div className="row">
+						<PostContent
+							id={post.id} 
+							title={post.title.rendered} 
+							content={post.content.rendered}/>
 
-					<PostSidebar 
-						date={post.date} 
-						author={post.author}/>
+						<PostSidebar 
+							date={post.date} 
+							author={post.author}/>
+					</div>
+					<div className="back">
+						<Link to='/'>Back to list of posts</Link>
+					</div>
 				</div>
-				<div className="back">
-					<Link to='/'>Back to list of posts</Link>
-				</div>
-			</div>
+			</DocumentTitle>
 		);
 	}
 

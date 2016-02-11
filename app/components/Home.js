@@ -7,7 +7,9 @@ var Home = React.createClass({
 		return (
 			<div>
 				<div className="container">
-					<Link to="/"><h1>WordPress Reader</h1></Link>
+					<Link to="/">
+						<img src={'https://stomptheweb.co.uk/wp-content/themes/stomp/images/logo.png'} className="logo" alt="Stomp Reader"/>
+					</Link>
 					{this.props.children}
 				</div>
 			</div>

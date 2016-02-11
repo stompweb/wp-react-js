@@ -27,6 +27,7 @@
     "webpack": "^1.12.13"
   },
   "dependencies": {
+    "react-document-title": "^2.0.1",
     "wordpress-rest-api": "^0.6.0"
   }
 }
