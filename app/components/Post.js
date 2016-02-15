@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { unescape } from 'underscore'
 var DocumentTitle = require('react-document-title');
 
 var PostContent = React.createClass({
@@ -88,7 +89,10 @@ var Post = React.createClass({
 							author={post.author}/>
 					</div>
 					<div className="back">
-						<Link to='/'>Back to list of posts</Link>
+						<Link to='/'>
+							{_.unescape('&lt; ')}
+							Back to list of posts
+						</Link>
 					</div>
 				</div>
 			</DocumentTitle>
