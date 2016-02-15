@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 import { Link } from 'react-router';
 var DocumentTitle = require('react-document-title');
 
@@ -31,13 +31,16 @@ var PostSidebar = React.createClass({
 	},
 
 	render: function() {
+
+		var date = new Date(this.props.date);
+		var postDate = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear();
 	    
 	    return (
 	    	<div className="col-md-offset-1 col-md-3">
 	      		<div className="card">
 	      			<div className="card-block">
 						<h4>{this.props.author}</h4>
-						<h4>{this.props.date}</h4>
+						<h4>{postDate}</h4>
 	      			</div>
 	      		</div>
 			</div>

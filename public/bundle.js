@@ -24756,16 +24756,25 @@
 
 
 		setUpData: function setUpData() {
-			$.ajax({
-				url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
-				dataType: 'json',
-				success: function (posts) {
-					this.setState({ data: posts });
-				}.bind(this)
-			});
+
+			var postData = localStorage.getItem("postData");
+
+			if (postData) {
+
+				this.setState({ data: JSON.parse(postData) });
+			} else {
+
+				$.ajax({
+					url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
+					dataType: 'json',
+					success: function (posts) {
+						this.setState({ data: posts });
+						localStorage.setItem("postData", JSON.stringify(posts));
+					}.bind(this)
+				});
+			}
 		},
 
-		// TODO: Cache the posts
 		componentDidMount: function componentDidMount() {
 			this.setUpData();
 		},
@@ -45739,70 +45748,77 @@
 
 	'use strict';
 
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	var _reactRouter = __webpack_require__(159);
 
-	var React = __webpack_require__(1);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var DocumentTitle = __webpack_require__(261);
 
-	var PostContent = React.createClass({
+	var PostContent = _react2.default.createClass({
 		displayName: 'PostContent',
 
 
 		propTypes: {
-			title: React.PropTypes.string.isRequired,
-			content: React.PropTypes.string.isRequired
+			title: _react2.default.PropTypes.string.isRequired,
+			content: _react2.default.PropTypes.string.isRequired
 		},
 
 		render: function render() {
 
-			return React.createElement(
+			return _react2.default.createElement(
 				'div',
 				{ className: 'col-md-8' },
-				React.createElement(
+				_react2.default.createElement(
 					'div',
 					{ className: 'post' },
-					React.createElement(
+					_react2.default.createElement(
 						'h1',
 						null,
 						this.props.title
 					),
-					React.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.content } })
+					_react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.content } })
 				)
 			);
 		}
 
 	});
 
-	var PostSidebar = React.createClass({
+	var PostSidebar = _react2.default.createClass({
 		displayName: 'PostSidebar',
 
 
 		propTypes: {
-			author: React.PropTypes.number.isRequired,
-			date: React.PropTypes.string.isRequired
+			author: _react2.default.PropTypes.number.isRequired,
+			date: _react2.default.PropTypes.string.isRequired
 		},
 
 		render: function render() {
 
-			return React.createElement(
+			var date = new Date(this.props.date);
+			var postDate = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear();
+
+			return _react2.default.createElement(
 				'div',
 				{ className: 'col-md-offset-1 col-md-3' },
-				React.createElement(
+				_react2.default.createElement(
 					'div',
 					{ className: 'card' },
-					React.createElement(
+					_react2.default.createElement(
 						'div',
 						{ className: 'card-block' },
-						React.createElement(
+						_react2.default.createElement(
 							'h4',
 							null,
 							this.props.author
 						),
-						React.createElement(
+						_react2.default.createElement(
 							'h4',
 							null,
-							this.props.date
+							postDate
 						)
 					)
 				)
@@ -45811,7 +45827,7 @@
 
 	});
 
-	var Post = React.createClass({
+	var Post = _react2.default.createClass({
 		displayName: 'Post',
 
 
@@ -45837,30 +45853,30 @@
 
 		render: function render() {
 			if (this.state.data.length < 1) {
-				return React.createElement('div', null);
+				return _react2.default.createElement('div', null);
 			}
 			var post = this.state.data[0];
-			return React.createElement(
+			return _react2.default.createElement(
 				DocumentTitle,
 				{ title: post.title.rendered },
-				React.createElement(
+				_react2.default.createElement(
 					'div',
 					null,
-					React.createElement(
+					_react2.default.createElement(
 						'div',
 						{ className: 'row' },
-						React.createElement(PostContent, {
+						_react2.default.createElement(PostContent, {
 							id: post.id,
 							title: post.title.rendered,
 							content: post.content.rendered }),
-						React.createElement(PostSidebar, {
+						_react2.default.createElement(PostSidebar, {
 							date: post.date,
 							author: post.author })
 					),
-					React.createElement(
+					_react2.default.createElement(
 						'div',
 						{ className: 'back' },
-						React.createElement(
+						_react2.default.createElement(
 							_reactRouter.Link,
 							{ to: '/' },
 							'Back to list of posts'
