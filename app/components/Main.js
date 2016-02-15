@@ -35,16 +35,27 @@ var PostsList = React.createClass({
 var Main = React.createClass({
 
 	setUpData: function() {
-		$.ajax({
-			url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
-			dataType: 'json',
-			success: function(posts) {
-				this.setState({data: posts});
-			}.bind(this)
-		});
+
+		var postData = localStorage.getItem("postData");
+		
+		if (postData) {
+
+			this.setState({data: JSON.parse(postData)});
+
+		} else {
+
+			$.ajax({
+				url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
+				dataType: 'json',
+				success: function(posts) {
+					this.setState({data: posts});
+					localStorage.setItem("postData", JSON.stringify(posts));
+				}.bind(this)
+			});
+		}
+
 	},
 
-	// TODO: Cache the posts
 	componentDidMount: function() {
 		this.setUpData();
 	},
