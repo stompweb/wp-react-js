@@ -24767,22 +24767,14 @@
 
 		setUpData: function setUpData() {
 
-			var postData = localStorage.getItem("postData");
-
-			if (postData) {
-
-				this.setState({ data: JSON.parse(postData) });
-			} else {
-
-				$.ajax({
-					url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
-					dataType: 'json',
-					success: function (posts) {
-						this.setState({ data: posts });
-						localStorage.setItem("postData", JSON.stringify(posts));
-					}.bind(this)
-				});
-			}
+			$.ajax({
+				url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
+				dataType: 'json',
+				success: function (posts) {
+					this.setState({ data: posts });
+					localStorage.setItem("postData", JSON.stringify(posts));
+				}.bind(this)
+			});
 		},
 
 		componentDidMount: function componentDidMount() {
