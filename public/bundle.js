@@ -24764,20 +24764,20 @@
 
 		setUpData: function setUpData() {
 
-			wp.posts().get(function (err, data) {
-				console.log(data);
-				this.setState({ data: data });
-			}.bind(this));
-
 			/*
-	  $.ajax({
-	  	url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
-	  	dataType: 'json',
-	  	success: function(posts) {
-	  		this.setState({data: posts});
-	  	}.bind(this)
-	  });
+	  wp.posts().get( function(err, data) {
+	  	console.log(err);
+	  	this.setState({data: data});
+	  }.bind(this));
 	  */
+
+			$.ajax({
+				url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
+				dataType: 'json',
+				success: function (posts) {
+					this.setState({ data: posts });
+				}.bind(this)
+			});
 		},
 
 		componentDidMount: function componentDidMount() {

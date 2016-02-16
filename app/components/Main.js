@@ -33,12 +33,13 @@ var Main = React.createClass({
 
 	setUpData: function() {
 
+		/*
 		wp.posts().get( function(err, data) {
-			console.log(data);
+			console.log(err);
 			this.setState({data: data});
 		}.bind(this));
+		*/
 
-		/*
 		$.ajax({
 			url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
 			dataType: 'json',
@@ -46,7 +47,6 @@ var Main = React.createClass({
 				this.setState({data: posts});
 			}.bind(this)
 		});
-		*/
 
 	},
 
