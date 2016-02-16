@@ -1,10 +1,7 @@
 var React = require('react');
 import { Link } from 'react-router'
 var WP = require( 'wordpress-rest-api' );
-var site = new WP({
-    endpoint: 'https://stomptheweb.co.uk/wp-json'
-});
-var postsRequest = site.posts();
+var wp = new WP({ endpoint: 'https://stomptheweb.co.uk/wp-json'});
 
 var PostsList = React.createClass({
 
@@ -36,14 +33,20 @@ var Main = React.createClass({
 
 	setUpData: function() {
 
+		wp.posts().get( function(err, data) {
+			console.log(data);
+			this.setState({data: data});
+		}.bind(this));
+
+		/*
 		$.ajax({
 			url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
 			dataType: 'json',
 			success: function(posts) {
 				this.setState({data: posts});
-				localStorage.setItem("postData", JSON.stringify(posts));
 			}.bind(this)
 		});
+		*/
 
 	},
 

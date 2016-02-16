@@ -24726,10 +24726,7 @@
 	var React = __webpack_require__(1);
 
 	var WP = __webpack_require__(218);
-	var site = new WP({
-		endpoint: 'https://stomptheweb.co.uk/wp-json'
-	});
-	var postsRequest = site.posts();
+	var wp = new WP({ endpoint: 'https://stomptheweb.co.uk/wp-json' });
 
 	var PostsList = React.createClass({
 		displayName: 'PostsList',
@@ -24767,14 +24764,20 @@
 
 		setUpData: function setUpData() {
 
-			$.ajax({
-				url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
-				dataType: 'json',
-				success: function (posts) {
-					this.setState({ data: posts });
-					localStorage.setItem("postData", JSON.stringify(posts));
-				}.bind(this)
-			});
+			wp.posts().get(function (err, data) {
+				console.log(data);
+				this.setState({ data: data });
+			}.bind(this));
+
+			/*
+	  $.ajax({
+	  	url: 'https://stomptheweb.co.uk/wp-json/wp/v2/posts',
+	  	dataType: 'json',
+	  	success: function(posts) {
+	  		this.setState({data: posts});
+	  	}.bind(this)
+	  });
+	  */
 		},
 
 		componentDidMount: function componentDidMount() {
@@ -27246,7 +27249,7 @@
 	 * 
 	 */
 	/**
-	 * bluebird build version 3.3.1
+	 * bluebird build version 3.2.2
 	 * Features enabled: core, race, call_get, generators, map, nodeify, promisify, props, reduce, settle, some, using, timers, filter, any, each
 	*/
 	!function(e){if(true)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Promise=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof _dereq_=="function"&&_dereq_;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof _dereq_=="function"&&_dereq_;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
@@ -28016,86 +28019,6 @@
 	    return config.longStackTraces && longStackTracesIsSupported();
 	};
 
-	var fireDomEvent = (function() {
-	    try {
-	        var event = document.createEvent("CustomEvent");
-	        event.initCustomEvent("testingtheevent", false, true, {});
-	        util.global.dispatchEvent(event);
-	        return function(name, event) {
-	            var domEvent = document.createEvent("CustomEvent");
-	            domEvent.initCustomEvent(name.toLowerCase(), false, true, event);
-	            return !util.global.dispatchEvent(domEvent);
-	        };
-	    } catch (e) {}
-	    return function() {
-	        return false;
-	    };
-	})();
-
-	var fireGlobalEvent = (function() {
-	    if (util.isNode) {
-	        return function() {
-	            return process.emit.apply(process, arguments);
-	        };
-	    } else {
-	        if (!util.global) {
-	            return function() {
-	                return false;
-	            };
-	        }
-	        return function(name) {
-	            var methodName = "on" + name.toLowerCase();
-	            var method = util.global[methodName];
-	            if (!method) return false;
-	            method.apply(util.global, [].slice.call(arguments, 1));
-	            return true;
-	        };
-	    }
-	})();
-
-	function generatePromiseLifecycleEventObject(name, promise) {
-	    return {promise: promise};
-	}
-
-	var eventToObjectGenerator = {
-	    promiseCreated: generatePromiseLifecycleEventObject,
-	    promiseFulfilled: generatePromiseLifecycleEventObject,
-	    promiseRejected: generatePromiseLifecycleEventObject,
-	    promiseResolved: generatePromiseLifecycleEventObject,
-	    promiseCancelled: generatePromiseLifecycleEventObject,
-	    promiseChained: function(name, promise, child) {
-	        return {promise: promise, child: child};
-	    },
-	    warning: function(name, warning) {
-	        return {warning: warning};
-	    },
-	    unhandledRejection: function (name, reason, promise) {
-	        return {reason: reason, promise: promise};
-	    },
-	    rejectionHandled: generatePromiseLifecycleEventObject
-	};
-
-	var activeFireEvent = function (name) {
-	    var globalEventFired = false;
-	    try {
-	        globalEventFired = fireGlobalEvent.apply(null, arguments);
-	    } catch (e) {
-	        async.throwLater(e);
-	        globalEventFired = true;
-	    }
-
-	    var domEventFired = false;
-	    try {
-	        domEventFired = fireDomEvent(name,
-	                    eventToObjectGenerator[name].apply(null, arguments));
-	    } catch (e) {
-	        async.throwLater(e);
-	        domEventFired = true;
-	    }
-
-	    return domEventFired || globalEventFired;
-	};
-
 	Promise.config = function(opts) {
 	    opts = Object(opts);
 	    if ("longStackTraces" in opts) {
@@ -28132,20 +28055,8 @@
 	        propagateFromFunction = cancellationPropagateFrom;
 	        config.cancellation = true;
 	    }
-	    if ("monitoring" in opts) {
-	        if (opts.monitoring && !config.monitoring) {
-	            config.monitoring = true;
-	            Promise.prototype._fireEvent = activeFireEvent;
-	        } else if (!opts.monitoring && config.monitoring) {
-	            config.monitoring = false;
-	            Promise.prototype._fireEvent = defaultFireEvent;
-	        }
-	    }
 	};
 
-	function defaultFireEvent() { return false; }
-
-	Promise.prototype._fireEvent = defaultFireEvent;
 	Promise.prototype._execute = function(executor, resolve, reject) {
 	    try {
 	        executor(resolve, reject);
@@ -28297,10 +28208,7 @@
 	        var parsed = parseStackAndMessage(warning);
 	        warning.stack = parsed.message + "\n" + parsed.stack.join("\n");
 	    }
-
-	    if (!activeFireEvent("warning", warning)) {
-	        formatAndLogError(warning, "", true);
-	    }
+	    formatAndLogError(warning, "", true);
 	}
 
 	function reconstructStack(message, stacks) {
@@ -28427,12 +28335,30 @@
 	        async.throwLater(e);
 	    }
 
-	    if (name === "unhandledRejection") {
-	        if (!activeFireEvent(name, reason, promise) && !localEventFired) {
-	            formatAndLogError(reason, "Unhandled rejection ");
+	    var globalEventFired = false;
+	    try {
+	        globalEventFired = fireGlobalEvent(name, reason, promise);
+	    } catch (e) {
+	        globalEventFired = true;
+	        async.throwLater(e);
+	    }
+
+	    var domEventFired = false;
+	    if (fireDomEvent) {
+	        try {
+	            domEventFired = fireDomEvent(name.toLowerCase(), {
+	                reason: reason,
+	                promise: promise
+	            });
+	        } catch (e) {
+	            domEventFired = true;
+	            async.throwLater(e);
 	        }
-	    } else {
-	        activeFireEvent(name, promise);
+	    }
+
+	    if (!globalEventFired && !localEventFired && !domEventFired &&
+	        name === "unhandledRejection") {
+	        formatAndLogError(reason, "Unhandled rejection ");
 	    }
 	}
 
@@ -28677,6 +28603,59 @@
 
 	})([]);
 
+	var fireDomEvent;
+	var fireGlobalEvent = (function() {
+	    if (util.isNode) {
+	        return function(name, reason, promise) {
+	            if (name === "rejectionHandled") {
+	                return process.emit(name, promise);
+	            } else {
+	                return process.emit(name, reason, promise);
+	            }
+	        };
+	    } else {
+	        var globalObject = typeof self !== "undefined" ? self :
+	                     typeof window !== "undefined" ? window :
+	                     typeof global !== "undefined" ? global :
+	                     this !== undefined ? this : null;
+
+	        if (!globalObject) {
+	            return function() {
+	                return false;
+	            };
+	        }
+
+	        try {
+	            var event = document.createEvent("CustomEvent");
+	            event.initCustomEvent("testingtheevent", false, true, {});
+	            globalObject.dispatchEvent(event);
+	            fireDomEvent = function(type, detail) {
+	                var event = document.createEvent("CustomEvent");
+	                event.initCustomEvent(type, false, true, detail);
+	                return !globalObject.dispatchEvent(event);
+	            };
+	        } catch (e) {}
+
+	        var toWindowMethodNameMap = {};
+	        toWindowMethodNameMap["unhandledRejection"] = ("on" +
+	            "unhandledRejection").toLowerCase();
+	        toWindowMethodNameMap["rejectionHandled"] = ("on" +
+	            "rejectionHandled").toLowerCase();
+
+	        return function(name, reason, promise) {
+	            var methodName = toWindowMethodNameMap[name];
+	            var method = globalObject[methodName];
+	            if (!method) return false;
+	            if (name === "rejectionHandled") {
+	                method.call(globalObject, promise);
+	            } else {
+	                method.call(globalObject, reason, promise);
+	            }
+	            return true;
+	        };
+	    }
+	})();
+
 	if (typeof console !== "undefined" && typeof console.warn !== "undefined") {
 	    printWarning = function (message) {
 	        console.warn(message);
@@ -28697,8 +28676,7 @@
 	var config = {
 	    warnings: warnings,
 	    longStackTraces: false,
-	    cancellation: false,
-	    monitoring: false
+	    cancellation: false
 	};
 
 	if (longStackTraces) Promise.longStackTraces();
@@ -28713,9 +28691,6 @@
 	    cancellation: function() {
 	        return config.cancellation;
 	    },
-	    monitoring: function() {
-	        return config.monitoring;
-	    },
 	    propagateFromFunction: function() {
 	        return propagateFromFunction;
 	    },
@@ -28726,9 +28701,7 @@
 	    setBounds: setBounds,
 	    warn: warn,
 	    deprecated: deprecated,
-	    CapturedTrace: CapturedTrace,
-	    fireDomEvent: fireDomEvent,
-	    fireGlobalEvent: fireGlobalEvent
+	    CapturedTrace: CapturedTrace
 	};
 	};
 
@@ -28910,12 +28883,7 @@
 	        RejectionError: OperationalError,
 	        AggregateError: AggregateError
 	    });
-	    es5.defineProperty(Error, "__BluebirdErrorTypes__", {
-	        value: errorTypes,
-	        writable: false,
-	        enumerable: false,
-	        configurable: false
-	    });
+	    notEnumerableProp(Error, "__BluebirdErrorTypes__", errorTypes);
 	}
 
 	module.exports = {
@@ -29040,10 +29008,6 @@
 	    this.cancelPromise = null;
 	}
 
-	PassThroughHandlerContext.prototype.isFinallyHandler = function() {
-	    return this.type === 0;
-	};
-
 	function FinallyHandlerCancelReaction(finallyHandler) {
 	    this.finallyHandler = finallyHandler;
 	}
@@ -29079,7 +29043,7 @@
 
 	    if (!this.called) {
 	        this.called = true;
-	        var ret = this.isFinallyHandler()
+	        var ret = this.type === 0
 	            ? handler.call(promise._boundValue())
 	            : handler.call(promise._boundValue(), reasonOrValue);
 	        if (ret !== undefined) {
@@ -29898,7 +29862,6 @@
 	        this._resolveFromExecutor(executor);
 	    }
 	    this._promiseCreated();
-	    this._fireEvent("promiseCreated", this);
 	}
 
 	Promise.prototype.toString = function () {
@@ -30057,7 +30020,6 @@
 	                receiver = target === this ? undefined : this._boundTo;
 	            }
 	        }
-	        this._fireEvent("promiseChained", this, promise);
 	    }
 
 	    var domain = getDomain();
@@ -30110,17 +30072,14 @@
 
 	Promise.prototype._setFulfilled = function () {
 	    this._bitField = this._bitField | 33554432;
-	    this._fireEvent("promiseFulfilled", this);
 	};
 
 	Promise.prototype._setRejected = function () {
 	    this._bitField = this._bitField | 16777216;
-	    this._fireEvent("promiseRejected", this);
 	};
 
 	Promise.prototype._setFollowing = function () {
 	    this._bitField = this._bitField | 67108864;
-	    this._fireEvent("promiseResolved", this);
 	};
 
 	Promise.prototype._setIsFinal = function () {
@@ -30137,7 +30096,6 @@
 
 	Promise.prototype._setCancelled = function() {
 	    this._bitField = this._bitField | 65536;
-	    this._fireEvent("promiseCancelled", this);
 	};
 
 	Promise.prototype._setAsyncGuaranteed = function() {
@@ -30353,8 +30311,7 @@
 	    if (((bitField & 65536) !== 0)) {
 	        if (isPromise) promise._invokeInternalOnCancel();
 
-	        if (receiver instanceof PassThroughHandlerContext &&
-	            receiver.isFinallyHandler()) {
+	        if (receiver instanceof PassThroughHandlerContext) {
 	            receiver.cancelPromise = promise;
 	            if (tryCatch(handler).call(receiver, value) === errorObj) {
 	                promise._reject(errorObj.e);
@@ -31952,40 +31909,8 @@
 	var util = _dereq_("./util");
 	var TimeoutError = Promise.TimeoutError;
 
-	function HandleWrapper(handle)  {
-	    this.handle = handle;
-	}
-
-	HandleWrapper.prototype._resultCancelled = function() {
-	    clearTimeout(this.handle);
-	};
-
-	var afterValue = function(value) { return delay(+this).thenReturn(value); };
-	var delay = Promise.delay = function (ms, value) {
-	    var ret;
-	    var handle;
-	    if (value !== undefined) {
-	        ret = Promise.resolve(value)
-	                ._then(afterValue, null, null, ms, undefined);
-	        if (debug.cancellation() && value instanceof Promise) {
-	            ret._setOnCancel(value);
-	        }
-	    } else {
-	        ret = new Promise(INTERNAL);
-	        handle = setTimeout(function() { ret._fulfill(); }, +ms);
-	        if (debug.cancellation()) {
-	            ret._setOnCancel(new HandleWrapper(handle));
-	        }
-	    }
-	    ret._setAsyncGuaranteed();
-	    return ret;
-	};
-
-	Promise.prototype.delay = function (ms) {
-	    return delay(ms, this);
-	};
-
 	var afterTimeout = function (promise, message, parent) {
+	    if (!promise.isPending()) return;
 	    var err;
 	    if (typeof message !== "string") {
 	        if (message instanceof Error) {
@@ -31999,43 +31924,59 @@
 	    util.markAsOriginatingFromRejection(err);
 	    promise._attachExtraTrace(err);
 	    promise._reject(err);
-
-	    if (parent != null) {
+	    if (debug.cancellation()) {
 	        parent.cancel();
 	    }
 	};
 
+	var afterValue = function(value) { return delay(+this).thenReturn(value); };
+	var delay = Promise.delay = function (ms, value) {
+	    var ret;
+	    if (value !== undefined) {
+	        ret = Promise.resolve(value)
+	                ._then(afterValue, null, null, ms, undefined);
+	    } else {
+	        ret = new Promise(INTERNAL);
+	        setTimeout(function() { ret._fulfill(); }, +ms);
+	    }
+	    ret._setAsyncGuaranteed();
+	    return ret;
+	};
+
+	Promise.prototype.delay = function (ms) {
+	    return delay(ms, this);
+	};
+
 	function successClear(value) {
-	    clearTimeout(this.handle);
+	    var handle = this;
+	    if (handle instanceof Number) handle = +handle;
+	    clearTimeout(handle);
 	    return value;
 	}
 
 	function failureClear(reason) {
-	    clearTimeout(this.handle);
+	    var handle = this;
+	    if (handle instanceof Number) handle = +handle;
+	    clearTimeout(handle);
 	    throw reason;
 	}
 
+
 	Promise.prototype.timeout = function (ms, message) {
 	    ms = +ms;
-	    var ret, parent;
-
-	    var handleWrapper = new HandleWrapper(setTimeout(function timeoutTimeout() {
-	        if (ret.isPending()) {
-	            afterTimeout(ret, message, parent);
-	        }
-	    }, ms));
-
+	    var parent = this.then();
+	    var ret = parent.then();
+	    var handle = setTimeout(function timeoutTimeout() {
+	        afterTimeout(ret, message, parent);
+	    }, ms);
 	    if (debug.cancellation()) {
-	        parent = this.then();
-	        ret = parent._then(successClear, failureClear,
-	                            undefined, handleWrapper, undefined);
-	        ret._setOnCancel(handleWrapper);
-	    } else {
-	        ret = this._then(successClear, failureClear,
-	                            undefined, handleWrapper, undefined);
+	        ret._setOnCancel({
+	            _resultCancelled: function() {
+	                clearTimeout(handle);
+	            }
+	        });
 	    }
-
-	    return ret;
+	    return ret._then(successClear, failureClear, undefined, handle, undefined);
 	};
 
 	};
@@ -32274,11 +32215,6 @@
 
 	var errorObj = {e: {}};
 	var tryCatchTarget;
-	var globalObject = typeof self !== "undefined" ? self :
-	    typeof window !== "undefined" ? window :
-	    typeof global !== "undefined" ? global :
-	    this !== undefined ? this : null;
-
 	function tryCatcher() {
 	    try {
 	        var target = tryCatchTarget;
@@ -32492,13 +32428,6 @@
 	    }
 	}
 
-	function isError(obj) {
-	    return obj !== null &&
-	           typeof obj === "object" &&
-	           typeof obj.message === "string" &&
-	           typeof obj.name === "string";
-	}
-
 	function markAsOriginatingFromRejection(e) {
 	    try {
 	        notEnumerableProp(e, "isOperational", true);
@@ -32513,7 +32442,7 @@
 	}
 
 	function canAttachTrace(obj) {
-	    return isError(obj) && es5.propertyIsWritable(obj, "stack");
+	    return obj instanceof Error && es5.propertyIsWritable(obj, "stack");
 	}
 
 	var ensureErrorObject = (function() {
@@ -32595,7 +32524,6 @@
 	    notEnumerableProp: notEnumerableProp,
 	    isPrimitive: isPrimitive,
 	    isObject: isObject,
-	    isError: isError,
 	    canEvaluate: canEvaluate,
 	    errorObj: errorObj,
 	    tryCatch: tryCatch,
@@ -32614,8 +32542,7 @@
 	    hasDevTools: typeof chrome !== "undefined" && chrome &&
 	                 typeof chrome.loadTimes === "function",
 	    isNode: isNode,
-	    env: env,
-	    global: globalObject
+	    env: env
 	};
 	ret.isRecentNode = ret.isNode && (function() {
 	    var version = process.versions.node.split(".").map(Number);
