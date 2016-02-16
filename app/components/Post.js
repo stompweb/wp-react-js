@@ -29,12 +29,14 @@ var PostSidebar = React.createClass({
 	propTypes: {
 		author: React.PropTypes.number.isRequired,
 		date: React.PropTypes.string.isRequired,
+		categories: React.PropTypes.array.isRequired,
 	},
 
 	render: function() {
 
 		var date = new Date(this.props.date);
 		var postDate = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear();
+		var categories = this.props.categories.join(', ');
 	    
 	    return (
 	    	<div className="col-md-offset-1 col-md-3">
@@ -42,6 +44,7 @@ var PostSidebar = React.createClass({
 	      			<div className="card-block">
 						<h4>{this.props.author}</h4>
 						<h4>{postDate}</h4>
+						<h4>{categories}</h4>
 	      			</div>
 	      		</div>
 			</div>
@@ -73,8 +76,10 @@ var Post = React.createClass({
 	},
 
 	render: function() {
+		// When the view first renders it won't have any information, so return
 		if ( this.state.data.length < 1 ) { return <div /> }
 		var post = this.state.data[0];
+		console.log(post.categories);
 		return (
 			<DocumentTitle title={post.title.rendered}>
 				<div>
@@ -82,11 +87,12 @@ var Post = React.createClass({
 						<PostContent
 							id={post.id} 
 							title={post.title.rendered} 
-							content={post.content.rendered}/>
+							content={post.content.rendered} />
 
 						<PostSidebar 
 							date={post.date} 
-							author={post.author}/>
+							author={post.author}
+							categories={post.categories} />
 					</div>
 					<div className="back">
 						<Link to='/'>

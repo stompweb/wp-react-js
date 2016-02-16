@@ -1,6 +1,11 @@
 var React = require('react');
 import { Link } from 'react-router'
 
+/* 
+** Using the Home component as the parent component. This means when the child components are loaded
+** this component doesn't need to be so logo/menus are "static".
+*/
+
 var Home = React.createClass({
 
 	render: function() {

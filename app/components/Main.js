@@ -67,6 +67,7 @@ var Main = React.createClass({
 	},
 
 	render: function() {
+		// When the view first renders it won't have any information, so return
 		if ( this.state.data.length < 1 ) { return <div /> }
 		return (
 			<div>
